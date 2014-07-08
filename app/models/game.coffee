@@ -19,20 +19,17 @@ class Game extends Backbone.Model
     @setupField()
 
   setupField: ->
-    @field = new Field()
+    options =
+      playerCount: if @get('mode') is 'single' then 1 else 2
 
-    # starting point for player 0 -> top left
-    @field.get('possessions')[0][0] = 0
-
-    # starting point for player 1 -> bottom right
-    if @get('mode') is 'multi'
-      @field.get('possessions')[@field.get('height') - 1][@field.get('width') - 1] = 1
-
+    @field = new Field options
 
   colorPicked: (color, playerIndex) ->
     @updateField color, playerIndex
     @increaseMoves playerIndex
     isOver = @checkIfOver playerIndex
+
+    console.warn 'finish #colorPicked'
 
     @trigger 'over'
     if @get('mode') is 'single'

@@ -15,13 +15,21 @@ class Field extends Backbone.Model
     possessions: []   # the underlying posessions representation
     original: []      # a copy of the starting colors field
 
-  initialize: (data) ->
+  initialize: (options) ->
     super
 
     # create a random field if not field specified
-    if !data or !data.colors
+    if !options or !options.colors
       field = Field.random @get('width'), @get('height')
       @set field
+
+    # starting point for player 0 -> top left
+    @get('possessions')[0][0] = 0
+
+    # starting point for player 1 -> bottom right
+    if options.playerCount is 2
+      @field.get('possessions')[@field.get('height') - 1][@field.get('width') - 1] = 1
+
 
   # Generates a random field with the sizes of this field instance
   # @return [{colors: Array, possessions: Array, original: Array}] the generated field
