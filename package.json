@@ -13,6 +13,7 @@
     "jquery": "^2.1.1",
     "gulp-mocha": "^0.4.1",
     "coffee-script": "^1.7.1",
-    "should": "^4.0.4"
+    "should": "^4.0.4",
+    "sinon": "^1.10.2"
   }
 }

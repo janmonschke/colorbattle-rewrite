@@ -28,7 +28,7 @@ class Field extends Backbone.Model
 
     # starting point for player 1 -> bottom right
     if options.playerCount is 2
-      @field.get('possessions')[@field.get('height') - 1][@field.get('width') - 1] = 1
+      @get('possessions')[@get('height') - 1][@get('width') - 1] = 1
 
 
   # Generates a random field with the sizes of this field instance

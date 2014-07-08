@@ -40,7 +40,7 @@ gulp.task('test', function(){
   require('coffee-script');
   require('should');
   return gulp.src('test/**/*.coffee', {read: false})
-        .pipe(mocha({reporter: 'nyan'}));
+        .pipe(mocha({reporter: 'dot'}));
 });
 
 gulp.task('watch', function(){
