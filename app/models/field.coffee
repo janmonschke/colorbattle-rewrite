@@ -11,15 +11,16 @@ class Field extends Backbone.Model
   defaults: ->
     width:  20        # the width of the field
     height: 20        # the height of the field
-    colors: []        # the color representation of the field
-    possessions: []   # the underlying posessions representation
-    original: []      # a copy of the starting colors field
+    colors: null      # the color representation of the field
+    possessions: null # the underlying posessions representation
+    original: null    # a copy of the starting colors field
+    playerCount: 1    # the amount of players
 
-  initialize: (options) ->
+  initialize: ->
     super
 
     # create a random field if not field specified
-    if !options or !options.colors
+    if @get('colors') is null
       field = Field.random @get('width'), @get('height')
       @set field
 
@@ -27,7 +28,7 @@ class Field extends Backbone.Model
     @get('possessions')[0][0] = 0
 
     # starting point for player 1 -> bottom right
-    if options.playerCount is 2
+    if @get('playerCount') is 2
       @get('possessions')[@get('height') - 1][@get('width') - 1] = 1
 
 
@@ -73,7 +74,7 @@ class Field extends Backbone.Model
       currowPosessions = possessions[i]
 
       for u in [0...width]
-        if currowPosessions[u] == playerIndex # only increas if pixel is owned by the player
+        if currowPosessions[u] == playerIndex # only increas if position is owned by the player
           playerPosessions++
 
     return Math.floor (playerPosessions / needed) * 100
