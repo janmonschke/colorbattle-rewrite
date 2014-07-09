@@ -23,6 +23,20 @@ describe 'Game', ->
     game.colorPicked color, player
     spy.called.should.be.true
 
+  it 'should trigger the `over` event when a user wins', ->
+    game = new Game()
+    spy = sinon.spy()
+    game.on 'over', spy
+    game.field.getPossessionPercentage = -> 100
+    game.colorPicked 0, 0
+    spy.called.should.be.true
+
+    spy = sinon.spy()
+    game.on 'over', spy
+    game.field.getPossessionPercentage = -> 99
+    game.colorPicked 0, 0
+    spy.called.should.be.false
+
   describe 'checkIfOver', ->
     it 'should be over when >= 50 percent for one player in multiplayer game', ->
       game = new Game(mode: 'multi')

@@ -29,13 +29,8 @@ class Game extends Backbone.Model
     @increaseMoves playerIndex
     isOver = @checkIfOver playerIndex
 
-    console.warn 'finish #colorPicked'
-
-    @trigger 'over'
-    if @get('mode') is 'single'
-      Backbone.trigger 'single_game_over', @
-    else
-      Backbone.trigger 'multi_game_over', @
+    if isOver
+      @trigger 'over'
 
   updateField: (color, playerIndex) ->
     @field.playerPicked playerIndex, color
