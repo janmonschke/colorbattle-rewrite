@@ -23,7 +23,9 @@ module.exports =
         cb null, null
 
   add: (player, cb) ->
-    waiting_list.push player
+    index = waiting_list.indexOf player
+    if index is -1
+      waiting_list.push player
     cb null
 
   remove: (players, cb) ->
