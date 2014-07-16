@@ -1,4 +1,3 @@
-
 Game = require('./game')
 
 class RemoteGame extends Game
@@ -8,7 +7,5 @@ class RemoteGame extends Game
     defaults.socket = null      # the socket for the game communication
     defaults
 
-  setup: ->
-
-  updateField: (color, playerIndex) ->
-    @socket.emit 'pick_color', color
+  colorPicked: (color, playerIndex) ->
+    @get('socket').emit 'pick_color', color

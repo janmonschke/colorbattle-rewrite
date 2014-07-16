@@ -16,6 +16,7 @@ module.exports =
     game = new Game
       id: "#{new Date().getTime()}-#{Math.random()*395472234}"
       players: players
+      mode: 'multi'
 
     games.push game
 

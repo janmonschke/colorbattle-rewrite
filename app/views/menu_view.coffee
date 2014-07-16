@@ -1,4 +1,5 @@
 View = require('./view')
+RemoteGameInitializer = require('../models/remote_game_initializer')
 
 class MenuView extends View
 
@@ -21,9 +22,13 @@ class MenuView extends View
     return if @isWaiting
     @isWaiting = true
 
+    @socket = io()
+    @initializer = new RemoteGameInitializer socket: @socket
+    @initializer.initGame()
+
     @updateWaitingState()
 
-  updateWaitingState: ->
+  updateWaitingState: =>
     if @isWaiting
       @$('.waiting_new_game').addClass('show')
     else

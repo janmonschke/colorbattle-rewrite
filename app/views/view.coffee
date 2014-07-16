@@ -5,6 +5,10 @@ class View extends Backbone.View
   # @property [Object<View>] All subviews
   _subViews: null
 
+  # save the options hash
+  initialize: (@options = {}) ->
+    super
+
   # The template function for this view
   #
   # @param data [Object] data for this template

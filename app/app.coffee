@@ -5,13 +5,6 @@ Backbone.$ = $
 
 # init code
 AppController = require('./app_controller')
-new AppController()
+app = new AppController()
 
 Backbone.history.start()
-
-Game = require('./models/game')
-
-window.g = new Game()
-window.socket = io()
-
-debugger

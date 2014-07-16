@@ -1,5 +1,5 @@
-
-Backbone = require('Backbone')
+_ = require('underscore')
+Backbone = require('backbone')
 Field = require('./field')
 
 class Game extends Backbone.Model
@@ -10,7 +10,7 @@ class Game extends Backbone.Model
     mode: 'single'    # the game mode, can either be single or multi
     timeoutTime: 60 * 1000 # maximum time between player moves
 
-  initialize: ->
+  initialize: (@options = {}) ->
     super
 
     @start()
@@ -19,10 +19,17 @@ class Game extends Backbone.Model
     @setupField()
 
   setupField: ->
-    options =
+    fieldOptions =
       playerCount: if @get('mode') is 'single' then 1 else 2
 
-    @field = new Field options
+    # if a field has been specified, use that
+    if @options.field?
+      _.extend fieldOptions, @options.field
+      # remove traces from the field
+      delete @options.field
+      @set('field', null)
+
+    @field = new Field fieldOptions
 
   colorPicked: (color, playerIndex) ->
     @updateField color, playerIndex

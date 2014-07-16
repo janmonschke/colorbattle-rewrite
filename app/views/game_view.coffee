@@ -1,4 +1,5 @@
 View = require('./view')
+FieldView = require('./field_view')
 
 class GameView extends View
   class: 'game'
@@ -14,6 +15,8 @@ class GameView extends View
     # create the field subview
     @subView new FieldView
       model: @model.field
+      game: @model
+      playerIndex: @options.playerIndex
       el: '.field'
 
 module.exports = GameView

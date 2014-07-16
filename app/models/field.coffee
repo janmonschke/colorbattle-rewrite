@@ -1,7 +1,7 @@
 #
 # Contains the base algorithms for creating and filling fields.
 #
-
+_ = require('underscore')
 Backbone = require('Backbone')
 
 class Field extends Backbone.Model
@@ -116,24 +116,38 @@ class Field extends Backbone.Model
 
   # Fills the possessions and colors for this player at (x/y) via floodfill
   fillForPlayer: (playerIndex, color, x, y) ->
+    positions = []
+
+    @getFreePositionsByColorAndPos positions, color, x, y
+
     possessions = @get('possessions')
-    # fill current position
-    possessions[y][x] = playerIndex
 
-    # fill to the right
+    for position in positions
+      # fill the position
+      possessions[position.y][position.x] = playerIndex
+
+  getFreePositionsByColorAndPos: (positions, color, x, y) ->
+    return if _.find positions, (pos) -> pos.x is x and pos.y is y
+    positions.push
+      x: x
+      y: y
+
+    possessions = @get('possessions')
+
+    # look to the right
     if @isColor(x+1, y, color) and (possessions[y]?[x+1] is Field.free)
-      @fillForPlayer playerIndex, color, x+1, y
+      @getFreePositionsByColorAndPos positions, color, x+1, y
 
-    # fill underneath
+    # look underneath
     if @isColor(x, y+1, color) and (possessions[y+1]?[x] is Field.free)
-      @fillForPlayer playerIndex, color, x, y+1
+      @getFreePositionsByColorAndPos positions, color, x, y+1
 
-    # fill above
+    # look above
     if @isColor(x, y-1, color) and (possessions[y-1]?[x] is Field.free)
-      @fillForPlayer playerIndex, color, x, y-1
+      @getFreePositionsByColorAndPos positions, color, x, y-1
 
-    # fill to the left
+    # look to the left
     if @isColor(x-1, y, color) and (possessions[y]?[x-1] is Field.free)
-      @fillForPlayer playerIndex, color, x-1, y
+      @getFreePositionsByColorAndPos positions, color, x-1, y
 
 module.exports = Field

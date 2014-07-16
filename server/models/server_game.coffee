@@ -80,8 +80,8 @@ class ServerGame extends Game
         player.emit 'you_won', 'opponent_left'
 
   toJSON: ->
-    console.log 'toJSON, server game'
     id: @id
     field: @field.toJSON()
+    mode: @get('mode')
 
 module.exports = ServerGame
