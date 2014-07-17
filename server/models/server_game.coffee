@@ -21,7 +21,7 @@ class ServerGame extends Game
     for player in players
       @trackPlayer player
 
-    @started = true
+    @set('started', true)
 
     @currentPlayer = players[0]
     @moveTimeout = setTimeout @playerTimedOut, @get('timeoutTime')
@@ -31,18 +31,16 @@ class ServerGame extends Game
     player.on 'disconnect', => @playerLeft player
 
   gameOver: =>
-    @set('over', true)
     for player, playerIndex in @get('players')
-      if @field.isOver playerIndex
+      if @checkIfOver playerIndex
         player.emit 'you_won', 'normal'
       else
-        player.emit 'you_lost'
+        player.emit 'you_lost', 'normal'
 
   colorPicked: (color, player) ->
     return if @get('over') or not @get('started')
     return unless _.contains @get('players'), player
     return if player isnt @currentPlayer
-
     players = @get('players')
     playerIndex = players.indexOf(player)
 
@@ -50,7 +48,8 @@ class ServerGame extends Game
     super color, playerIndex
 
     # game might be over now
-    return if @get('over')
+    if @get('over')
+      return @gameOver()
 
     @currentPlayer = if @currentPlayer is players[0] then players[1] else players[0]
 
@@ -58,7 +57,7 @@ class ServerGame extends Game
       playerSocket.emit 'field_changed', @field.toJSON()
 
     clearTimeout @moveTimeout
-    @moveTimeout = setTimeout @playerTimedOut, @field.timeoutTime
+    @moveTimeout = setTimeout @playerTimedOut, @get('timeoutTime')
 
   playerTimedOut: =>
     return if @get('over')

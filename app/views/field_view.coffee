@@ -5,9 +5,10 @@ Field = require('../models/field')
 class FieldView extends View
   maxFieldWidth: 460
 
-  events:
-    'click .color': 'markOrSelectNeighbours'
-    'touchstart .color': 'markOrSelectNeighbours'
+  initialize: ->
+    super
+
+    @listenTo @model, 'change', @updateField
 
   afterRender: =>
     width = @model.get('width')
@@ -43,40 +44,12 @@ class FieldView extends View
         element = colorElementsList.eq y * height + x
         # check if the field is still free
         matches = element.attr('class').match(colorRegex)
+
         # only check for color fields and not for player fields
         if matches? and possessions[y][x] isnt Field.free
           # remove the color
           element.removeClass matches[0]
           # add the owner's color
           element.addClass "player#{possessions[y][x]}"
-
-  markOrSelectNeighbours: (event) =>
-    isHighlighted = @$(event.target).hasClass('highlight')
-    @unhighlight()
-
-    x = parseInt event.target.getAttribute('data-x'), 10
-    y = parseInt event.target.getAttribute('data-y'), 10
-    color = @model.get('colors')[y][x]
-
-    if isHighlighted
-      @selectNeighbours event.target, x, y, color
-    else
-      @markNeighbours event.target, x, y, color
-
-    event.stopPropagation()
-    event.preventDefault()
-
-  selectNeighbours: (element, x, y, color) ->
-    @options.game.colorPicked color, @options.playerIndex
-
-  markNeighbours: (element, x, y, color) ->
-    width = @model.get('width')
-    positions = []
-    @model.getFreePositionsByColorAndPos positions, color, x, y
-    for position in positions
-      @$(".color:eq(#{position.x + position.y * width})").addClass('highlight')
-
-  unhighlight: ->
-    @$('.highlight').removeClass('highlight')
 
 module.exports = FieldView
