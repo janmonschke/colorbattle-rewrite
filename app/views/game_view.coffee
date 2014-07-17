@@ -2,7 +2,7 @@ View = require('./view')
 FieldView = require('./field_view')
 
 class GameView extends View
-  class: 'game'
+  className: 'game'
 
   events:
     'click .field .color': 'markOrSelectNeighbours'
@@ -11,6 +11,7 @@ class GameView extends View
   template: ->
     """
     <div class="index">#{@options.playerIndex}</div>
+    <div class="nextPlayer animated"></div>
     <div class="field"><div>
     """
 
@@ -23,12 +24,16 @@ class GameView extends View
       game: @model
       el: '.field'
 
+    @listenTo @model, 'change:nextPlayer', @updateNextPlayerField
+
+  afterRender: ->
+    @updateNextPlayerField()
+
   unhighlight: ->
     @$('.highlight').removeClass('highlight')
 
   markOrSelectNeighbours: (event) =>
     isHighlighted = @$(event.target).hasClass('highlight')
-    @unhighlight()
 
     x = parseInt event.target.getAttribute('data-x'), 10
     y = parseInt event.target.getAttribute('data-y'), 10
@@ -46,9 +51,26 @@ class GameView extends View
     @model.updateField @options.playerIndex, color
 
   markNeighbours: (element, x, y, color) ->
+    @unhighlight()
     width = @model.field.get('width')
     positions = @model.field.getFreePositionsByPlayerAndColor @options.playerIndex, color
     for position in positions
       @$(".color:eq(#{position.x + position.y * width})").addClass('highlight')
+
+  updateNextPlayerField: ->
+    nextPlayerText = ""
+    nextPlayerElement = @$('.nextPlayer')
+
+    # make it bounce
+    nextPlayerElement.addClass('bounce')
+    nextPlayerElement.one 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', ->
+      nextPlayerElement.removeClass('bounce')
+
+    # change the text
+    if @model.get('nextPlayer') is @options.playerIndex
+      nextPlayerText = "It's your turn :)"
+    else
+      nextPlayerText = "Waiting for the opponent ;)"
+    nextPlayerElement.text nextPlayerText
 
 module.exports = GameView

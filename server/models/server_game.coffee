@@ -51,10 +51,17 @@ class ServerGame extends Game
     if @get('over')
       return @gameOver()
 
-    @currentPlayer = if @currentPlayer is players[0] then players[1] else players[0]
+    if @currentPlayer is players[0]
+      @currentPlayer = players[1]
+      nextPlayerIndex = 1
+    else
+      @currentPlayer = players[0]
+      nextPlayerIndex = 0
 
     for playerSocket in players
-      playerSocket.emit 'field_changed', @field.toJSON()
+      playerSocket.emit 'next_round',
+        field: @field.toJSON()
+        nextPlayer: nextPlayerIndex
 
     clearTimeout @moveTimeout
     @moveTimeout = setTimeout @playerTimedOut, @get('timeoutTime')

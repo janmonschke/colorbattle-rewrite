@@ -28,8 +28,6 @@ class FieldView extends View
         color = "player#{possessions[y][x]}" if possessions[y][x] isnt Field.free
         @$el.append "<div class='color #{color}' data-x='#{x}' data-y='#{y}' style='width:#{size}px; height:#{size}px;'>"
 
-    console.log "color-elements in the DOM: #{@$('.color').length}"
-
   updateField: =>
     width = @model.get('width')
     height = @model.get('height')
@@ -47,8 +45,9 @@ class FieldView extends View
 
         # only check for color fields and not for player fields
         if matches? and possessions[y][x] isnt Field.free
-          # remove the color
+          # remove the color and the highlight
           element.removeClass matches[0]
+          element.removeClass 'highlight'
           # add the owner's color
           element.addClass "player#{possessions[y][x]}"
 
