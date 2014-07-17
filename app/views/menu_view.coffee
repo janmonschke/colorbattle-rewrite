@@ -6,7 +6,7 @@ class MenuView extends View
   template: ->
     """
     <ul class="menu">
-      <li class="new_game">New Game</li>
+      <li class="new_game button">New Game</li>
       <li class="waiting_new_game">waiting...</li>
     </ul>
     """

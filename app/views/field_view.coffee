@@ -15,9 +15,10 @@ class FieldView extends View
     colors = @model.get('colors')
     possessions = @model.get('possessions')
 
-    fieldWidth = @maxFieldWidth
+    fieldWidth = Math.min @maxFieldWidth, window.innerWidth
     size = Math.floor fieldWidth / width
-    @$el.width fieldWidth
+    actualWidth = size * width
+    @$el.width actualWidth
 
     # iterate over the field and create elements -> colors and possessions
     for y in [0...height]

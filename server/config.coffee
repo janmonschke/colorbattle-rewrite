@@ -8,6 +8,7 @@ morgan = require('morgan')
 module.exports = (app, io) ->
   # user jade for templating
   app.set 'view engine', 'jade'
+  app.set 'views', __dirname + '/views'
 
   # serve the public folder
   app.use serveStatic 'public'
