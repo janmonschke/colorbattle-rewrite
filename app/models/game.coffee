@@ -32,14 +32,15 @@ class Game extends Backbone.Model
     @field = new Field fieldOptions
 
   colorPicked: (color, playerIndex) ->
-    @updateField color, playerIndex
+    @updateField playerIndex, color
     @increaseMoves playerIndex
     isOver = @checkIfOver playerIndex
 
     if isOver
+      @set('over', true)
       @trigger 'over'
 
-  updateField: (color, playerIndex) ->
+  updateField: (playerIndex, color) ->
     @field.playerPicked playerIndex, color
 
   checkIfOver: (playerIndex) ->
