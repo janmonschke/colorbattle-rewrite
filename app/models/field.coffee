@@ -81,12 +81,23 @@ class Field extends Backbone.Model
 
   # The player at playerIndex chose the given color, recalculate the possessions and colors
   playerPicked: (playerIndex, color) ->
+    positions = @getFreePositionsByPlayerAndColor playerIndex, color
+    possessions = @get('possessions')
+
+    for position in positions
+      # fill the position
+      possessions[position.y][position.x] = playerIndex
+
+    @trigger 'change'
+
+  getFreePositionsByPlayerAndColor: (playerIndex, color) ->
+    positions = []
     for y in [0...@get('height')]
       for x in [0...@get('width')]
         if @isColor(x, y, color) and @isFree(x, y) and @playerOwnsNeighbour(playerIndex, x, y)
-          @fillForPlayer(playerIndex, color, x, y)
+          positions = positions.concat @fillForPlayer(playerIndex, color, x, y)
 
-    @trigger 'change'
+    return positions
 
   # Is this field free?
   isFree: (x, y) ->
@@ -120,11 +131,7 @@ class Field extends Backbone.Model
 
     @getFreePositionsByColorAndPos positions, color, x, y
 
-    possessions = @get('possessions')
-
-    for position in positions
-      # fill the position
-      possessions[position.y][position.x] = playerIndex
+    return positions
 
   getFreePositionsByColorAndPos: (positions, color, x, y) ->
     return if _.find positions, (pos) -> pos.x is x and pos.y is y
