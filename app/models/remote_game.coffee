@@ -12,8 +12,8 @@ class RemoteGame extends Game
 
     socket = @get('socket')
     socket.on 'next_round', @nextRound
-    socket.on 'you_won', (reason) -> alert "You won! reason: #{reason}"
-    socket.on 'you_lost', (reason) -> alert "You lost! reason: #{reason}"
+    socket.on 'you_won', (reason) => @trigger 'you_won', reason
+    socket.on 'you_lost', (reason) => @trigger 'you_lost', reason
 
   updateField: (playerIndex, color) ->
     @get('socket').emit 'pick_color', color

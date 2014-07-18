@@ -11,9 +11,14 @@ class GameView extends View
   template: ->
     """
     <div class="index">#{@options.playerIndex}</div>
-    <div class="nextPlayer animated"></div>
+    <div class="info animated"></div>
     <div class="field"><div>
     """
+
+  statusToMessage:
+    'you_lost': 'You lost!'
+    'you_won': 'You won!'
+    'normal': ''
 
   initialize: ->
     super
@@ -24,10 +29,12 @@ class GameView extends View
       game: @model
       el: '.field'
 
-    @listenTo @model, 'change:nextPlayer', @updateNextPlayerField
+    @listenTo @model, 'change:nextPlayer', @updateNextPlayerMessage
+    @listenTo @model, 'you_lost', (reason) => @showGameOverMessage('you_lost', reason)
+    @listenTo @model, 'you_won', (reason) => @showGameOverMessage('you_won', reason)
 
   afterRender: ->
-    @updateNextPlayerField()
+    @updateNextPlayerMessage()
 
   unhighlight: ->
     @$('.highlight').removeClass('highlight')
@@ -57,20 +64,35 @@ class GameView extends View
     for position in positions
       @$(".color:eq(#{position.x + position.y * width})").addClass('highlight')
 
-  updateNextPlayerField: ->
-    nextPlayerText = ""
-    nextPlayerElement = @$('.nextPlayer')
+  displayMessage: (message, effect) ->
+    infoElement = @$('.info')
+    infoElement.text message
 
-    # make it bounce
-    nextPlayerElement.addClass('bounce')
-    nextPlayerElement.one 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', ->
-      nextPlayerElement.removeClass('bounce')
+    if effect
+      infoElement.addClass effect
+      infoElement.one 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', ->
+        infoElement.removeClass effect
+
+  updateNextPlayerMessage: ->
+    nextPlayerText = ""
 
     # change the text
     if @model.get('nextPlayer') is @options.playerIndex
       nextPlayerText = "It's your turn :)"
     else
       nextPlayerText = "Waiting for the opponent ;)"
-    nextPlayerElement.text nextPlayerText
+
+    @displayMessage nextPlayerText, 'hinge'
+
+  showGameOverMessage: (who, reason) ->
+    text = ""
+
+    if who is 'you_won'
+      message = "#{@statusToMessage[who]}"
+      message = "#{message} #{@statusToMessage[reason]}" if reason
+      @displayMessage message, 'tada'
+    else
+      message = "#{@statusToMessage[who]}"
+      @displayMessage message, 'hinge'
 
 module.exports = GameView
