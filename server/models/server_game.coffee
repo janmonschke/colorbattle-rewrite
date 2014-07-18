@@ -71,7 +71,7 @@ class ServerGame extends Game
     @set('over', true)
 
     # the current player needed to long for its move
-    @currentPlayer.emit 'you_lost', 'opponent_timeout'
+    @currentPlayer.emit 'you_lost', 'you_timeout'
 
     # the other player has won now
     players = @get('players')

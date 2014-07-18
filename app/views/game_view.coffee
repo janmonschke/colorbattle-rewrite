@@ -19,6 +19,9 @@ class GameView extends View
     'you_lost': 'You lost!'
     'you_won': 'You won!'
     'normal': ''
+    'opponent_left': 'Your opponent left.'
+    'opponent_timeout': 'Your opponent timed out.'
+    'you_timeout': 'You timed out.'
 
   initialize: ->
     super
@@ -64,6 +67,7 @@ class GameView extends View
     for position in positions
       @$(".color:eq(#{position.x + position.y * width})").addClass('highlight')
 
+  # displays an info message and applies an effect when showing it
   displayMessage: (message, effect) ->
     infoElement = @$('.info')
     infoElement.text message
@@ -73,23 +77,25 @@ class GameView extends View
       infoElement.one 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', ->
         infoElement.removeClass effect
 
+  # show who's turn it is
   updateNextPlayerMessage: ->
     nextPlayerText = ""
 
-    # change the text
+    # change the text depending on the next player variable
     if @model.get('nextPlayer') is @options.playerIndex
       nextPlayerText = "It's your turn :)"
     else
       nextPlayerText = "Waiting for the opponent ;)"
 
-    @displayMessage nextPlayerText, 'hinge'
+    @displayMessage nextPlayerText, 'bounce'
 
+  # show a message when the game is over
   showGameOverMessage: (who, reason) ->
     text = ""
-
+    console.log reason, @statusToMessage
     if who is 'you_won'
       message = "#{@statusToMessage[who]}"
-      message = "#{message} #{@statusToMessage[reason]}" if reason
+      message = "#{message} #{@statusToMessage[reason]}" if @statusToMessage[reason]
       @displayMessage message, 'tada'
     else
       message = "#{@statusToMessage[who]}"
