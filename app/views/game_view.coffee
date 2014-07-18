@@ -11,6 +11,10 @@ class GameView extends View
   template: ->
     """
     <div class="index">#{@options.playerIndex}</div>
+    <div class="progress">
+      <div class="player0"></div>
+      <div class="player1"></div>
+    </div>
     <div class="info animated"></div>
     <div class="field"><div>
     """
@@ -33,6 +37,7 @@ class GameView extends View
       el: '.field'
 
     @listenTo @model, 'change:nextPlayer', @updateNextPlayerMessage
+    @listenTo @model, 'change', @updateProgressBars
     @listenTo @model, 'you_lost', (reason) => @showGameOverMessage('you_lost', reason)
     @listenTo @model, 'you_won', (reason) => @showGameOverMessage('you_won', reason)
 
@@ -91,14 +96,20 @@ class GameView extends View
 
   # show a message when the game is over
   showGameOverMessage: (who, reason) ->
-    text = ""
-    console.log reason, @statusToMessage
+    message = "#{@statusToMessage[who]}"
+    message = "#{message} #{@statusToMessage[reason]}" if @statusToMessage[reason]
+
     if who is 'you_won'
-      message = "#{@statusToMessage[who]}"
-      message = "#{message} #{@statusToMessage[reason]}" if @statusToMessage[reason]
       @displayMessage message, 'tada'
     else
-      message = "#{@statusToMessage[who]}"
       @displayMessage message, 'hinge'
+
+  updateProgressBars: ->
+    player0Progress = "#{@model.field.getPossessionPercentage(0)}%"
+    player1Progress = "#{@model.field.getPossessionPercentage(1)}%"
+
+    if player0Progress isnt "0%" and player1Progress isnt "0%"
+      @$('.progress .player0').css('width', player0Progress).text(player0Progress)
+      @$('.progress .player1').css('width', player1Progress).text(player1Progress)
 
 module.exports = GameView
