@@ -47,10 +47,6 @@ class ServerGame extends Game
     # use base Game object's method to determine over-state
     super color, playerIndex
 
-    # game might be over now
-    if @get('over')
-      return @gameOver()
-
     if @currentPlayer is players[0]
       @currentPlayer = players[1]
       nextPlayerIndex = 1
@@ -65,6 +61,10 @@ class ServerGame extends Game
 
     clearTimeout @moveTimeout
     @moveTimeout = setTimeout @playerTimedOut, @get('timeoutTime')
+
+    # game might be over now
+    if @get('over')
+      return @gameOver()
 
   playerTimedOut: =>
     return if @get('over')
