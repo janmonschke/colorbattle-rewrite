@@ -14,6 +14,7 @@ class GameView extends View
     <div class="progress">
       <div class="player0"></div>
       <div class="player1"></div>
+      <div class="end-mark"></div>
     </div>
     <div class="info animated"></div>
     <div class="field"><div>
@@ -109,7 +110,7 @@ class GameView extends View
     player1Progress = "#{@model.field.getPossessionPercentage(1)}%"
 
     if player0Progress isnt "0%" and player1Progress isnt "0%"
-      @$('.progress .player0').css('width', player0Progress).text(player0Progress)
-      @$('.progress .player1').css('width', player1Progress).text(player1Progress)
+      @$('.progress .player0').css('width', player0Progress)
+      @$('.progress .player1').css('width', player1Progress)
 
 module.exports = GameView

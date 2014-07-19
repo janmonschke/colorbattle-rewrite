@@ -1,10 +1,14 @@
 .game
+  width 460px
+  margin 0 auto
+
   .progress
     position relative
     height 25px
 
     .player0, .player1
       position absolute
+      height 100%
       transition all .2s ease-in
 
     .player0
@@ -12,3 +16,26 @@
 
     .player1
       right 0
+
+    .end-mark
+      left 0
+      width 50%
+      height 100%
+      border-right 1px inset DARK_GRAY
+
+/* Smaller than standard 960 (devices and browsers) */
+@media only screen and (max-width: 959px) {}
+
+/* Tablet Portrait size to standard 960 (devices and browsers) */
+@media only screen and (min-width: 768px) and (max-width: 959px) {}
+
+/* All Mobile Sizes (devices and browser) */
+@media only screen and (max-width: 767px)
+  .game
+    width 100%
+
+/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
+@media only screen and (min-width: 480px) and (max-width: 767px) {}
+
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
+@media only screen and (max-width: 479px) {}
